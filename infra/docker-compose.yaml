@@ -1,0 +1,29 @@
+version: '3.3'
+services:
+  backend:
+    container_name: weather_backend
+    build:
+      context: ../weather_site
+      dockerfile: Dockerfile
+#    image: nikiafree/weather_backend:latest
+    restart: always
+    volumes:
+      - static_value:/app/static_value/
+
+  nginx:
+    container_name: weather_nginx
+    restart: always
+    build:
+      context: ./
+      dockerfile: nginx.Dockerfile
+    volumes:
+      - static_value:/usr/share/nginx/html/static_value/
+    ports:
+      - "80:80"
+    links:
+      - backend
+    depends_on:
+      - backend
+
+volumes:
+  static_value:
